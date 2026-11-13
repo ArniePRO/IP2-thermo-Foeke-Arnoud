@@ -438,6 +438,9 @@ def init():
 def update(frame):
     particle.update_position()
     dot.set_data([particle.r[0]], [particle.r[1]])
+        ### YOUR CODE HERE ###
+    if particle.r[0] > 10:
+        particle.r[0] = particle.r[0]-20
     return dot,
 
 # Create animation
@@ -464,7 +467,9 @@ def update(frame):
     particle.update_position()
     dot.set_data([particle.r[0]], [particle.r[1]])
 ### YOUR CODE HERE ###
-    return dot,         
+if particle.r[0] > 10:
+    particle.r[0] = particle.r[0]-20
+    return dot,
 ```
 
 ```{exercise} Harde wanden
