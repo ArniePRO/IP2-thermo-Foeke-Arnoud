@@ -438,9 +438,6 @@ def init():
 def update(frame):
     particle.update_position()
     dot.set_data([particle.r[0]], [particle.r[1]])
-        ### YOUR CODE HERE ###
-    if particle.r[0] > 10:
-        particle.r[0] = particle.r[0]-20
     return dot,
 
 # Create animation
@@ -467,8 +464,8 @@ def update(frame):
     particle.update_position()
     dot.set_data([particle.r[0]], [particle.r[1]])
 ### YOUR CODE HERE ###
-if particle.r[0] > 10:
-    particle.r[0] = particle.r[0]-20
+    if particle.r[0] > 10:
+        particle.r[0] = particle.r[0]-20
     return dot,
 ```
 
@@ -485,6 +482,8 @@ def update(frame):
     particle.update_position()
     dot.set_data([particle.r[0]], [particle.r[1]])
 ### YOUR CODE HERE ###
+    if particle.r[0] > 10:
+        particle.v[0] = -particle.v[0]
     return dot,
 ```
 
@@ -500,6 +499,7 @@ dt = 0.1         # time step
 num_steps = 500  # number of time steps
 
 ### YOUR CODE HERE ###
+particle_ex9 = ParticleClass(m=1.0, v=[5.0, 3.0], r=[0.0, 0.0],R=1.0)
 
 # Create the figure and axis
 fig, ax = plt.subplots()
@@ -520,9 +520,17 @@ def init():
 
 # Update function for each frame
 def update(frame):
-    particle.update_position()
-    dot.set_data([particle.r[0]], [particle.r[1]])
+    particle_ex9.update_position()
+    dot.set_data([particle_ex9.r[0]], [particle_ex9.r[1]])
     ### YOUR CODE HERE ###
+    if particle_ex9.r[0] > 10:
+        particle_ex9.v[0] = -particle_ex9.v[0]
+    if particle_ex9.r[0] < -10:
+        particle_ex9.v[0] = -particle_ex9.v[0]
+    if particle_ex9.r[1] > 10: 
+        particle_ex9.v[1] = -particle_ex9.v[1]
+    if particle_ex9.r[1] < -10:
+        particle_ex9.v[1] = -particle_ex9.v[1]
     return dot,
 
 # Create animation
