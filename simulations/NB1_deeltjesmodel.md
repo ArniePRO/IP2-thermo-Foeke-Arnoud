@@ -431,18 +431,24 @@ def init():
     return dot,
 
 # Update function for each frame
+#def update(frame):
+    #particle.update_position()
+    #dot.set_data([particle.r[0]], [particle.r[1]])
+    #return dot,
 def update(frame):
     particle.update_position()
     dot.set_data([particle.r[0]], [particle.r[1]])
-    return dot,
-
+    if particle.r[0] > 10:
+        particle.r[0] = -10
+    if particle.r[0] < -10:
+        particle.r[0] = 10
+    return dot,         
 # Create animation
 ani = FuncAnimation(fig, update, frames=range(200), init_func=init, blit=True, interval=50)
 
 # For Jupyter notebook:
 from IPython.display import HTML
 HTML(ani.to_jshtml())
-
 ```
 
 Een van de dingen die je kunt opmerken, is dat het deeltje niet in zijn doos blijft.
@@ -459,7 +465,10 @@ Controleer je eigen antwoord door de functie hierboven even te vervangen door de
 def update(frame):
     particle.update_position()
     dot.set_data([particle.r[0]], [particle.r[1]])
-### YOUR CODE HERE ###
+    if particle.r[0] > 10:
+        particle.r[0] = -10
+    if particle.r[0] < -10:
+        particle.r[0] = 10
     return dot,         
 ```
 
