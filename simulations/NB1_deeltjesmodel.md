@@ -230,6 +230,27 @@ En als je wilt gaan voor een uitdaging:
 
 ```python
 ### YOUR CODE HERE ###
+particle_array1 = []
+
+for start_x1 in range(10):
+    particle_array1.append(ParticleClass(m=1.0, v=[np.random.uniform(-5.0, 6.0), 1.0], r=[start_x1, 0.0],R=1.0))
+    
+colors = plt.cm.viridis(np.linspace(0, 1, len(particle_array1)))
+    
+plt.figure()
+for  particle in particle_array1:
+    plt.plot(particle.r[0],particle.r[1], 'k.')
+    
+for particle, particle_object in enumerate(particle_array1):
+    particle_object.update_position(1.0)
+    
+for  particle in particle_array1:
+    plt.plot(particle.r[0],particle.r[1], 'b.')
+    
+    
+plt.xlabel('x')
+plt.ylabel('y')
+plt.show()
 ```
 
 Onze simulaties worden snel “zwaar”. Er moeten veel berekeningen gedaan worden en dat kost nu eenmaal tijd. Nu is het wel zo dat sommige berekeningen meer tijd kosten dan anderen. Om te kijken of een stukje code geoptimaliseerd kan worden, moeten we een timer maken. Dat kan met onderstaande code:
@@ -250,6 +271,16 @@ eind = time.time()
 lengte = eind - start
 
 print("Dit kostte ", lengte, "seconde!")
+
+start1 = time.time()
+
+array1 = np.random.randint(1,size=int(1e5))
+
+eind1 = time.time()
+lengte1 = eind1 - start1
+
+print("Dit kostte ", lengte1, "seconde!")
+print("Methode 2 is dus ", round(lengte/lengte1), "keer zo goed als methode 1")
 ```
 
 Idealiter draaien we de bovenstaande code een aantal keer zodat we een goede schatting hebben van de rekentijd.
@@ -268,7 +299,7 @@ Met de MyST extentie in jupyterlab kun je gebruik maken van [eval](https://mystm
 ```
 
 ```{solution} ex-intro-3
-De runtime is {eval}`<naam variabele>` korter.
+De runtime is {eval}`round(lengte/lengte1)` keer korter.
 ```
 
 ```python
