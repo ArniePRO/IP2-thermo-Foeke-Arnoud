@@ -36,7 +36,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Beginwaarden
-dt = 0.25                  #s
+dt = 0.5                   #s
 t_e = 10                   #s
 N = int(t_e/dt)+1
 t = np.arange(0,t_e+dt,dt) #s
@@ -229,7 +229,28 @@ En als je wilt gaan voor een uitdaging:
 ```
 
 ```python
-### YOUR CODE HERE ###
+deeltjes_arr = np.array([])
+r_start = 1
+
+for i in range(10):
+    deeltje = ParticleClass(m=1.0, v=[np.random.randint(-5,6), 0], r=[r_start,0.0],R=1.0)
+    deeltje.update_position(1.0)
+    deeltjes_arr = np.append(deeltjes_arr,deeltje)
+    r_start += 10
+
+s = 1
+for i in deeltjes_arr:
+    print('Deeltje',s,'heeft snelheid',i.r[0],'m/s')
+    s += 1
+
+plt.figure()
+plt.xlabel('x (m)')
+plt.ylabel('y (m)')
+
+for i in deeltjes_arr:
+    plt.plot(i.r[0],i.r[1],'k.')
+
+plt.show()
 ```
 
 Onze simulaties worden snel “zwaar”. Er moeten veel berekeningen gedaan worden en dat kost nu eenmaal tijd. Nu is het wel zo dat sommige berekeningen meer tijd kosten dan anderen. Om te kijken of een stukje code geoptimaliseerd kan worden, moeten we een timer maken. Dat kan met onderstaande code:
@@ -241,6 +262,7 @@ import numpy as np
 start = time.time()
 
 array = np.array([])
+array_snel = np.array([])
 N = int(1e5)
 
 for i in range(N):
@@ -249,7 +271,15 @@ for i in range(N):
 eind = time.time()
 lengte = eind - start
 
-print("Dit kostte ", lengte, "seconde!")
+start_snel = time.time()
+array_snel = np.append(array,np.random.rand(N))
+eind_snel = time.time()
+lengte_snel = eind_snel - start_snel
+efficiency = round(lengte/lengte_snel)
+
+print("De lange kostte ", lengte, "seconde!")
+print("De korte kostte ", lengte_snel, "seconde!")
+print('De runtime is nu',efficiency,'keer korter!')
 ```
 
 Idealiter draaien we de bovenstaande code een aantal keer zodat we een goede schatting hebben van de rekentijd.
@@ -268,12 +298,9 @@ Met de MyST extentie in jupyterlab kun je gebruik maken van [eval](https://mystm
 ```
 
 ```{solution} ex-intro-3
-De runtime is {eval}`<naam variabele>` korter.
+De runtime is {eval}`efficiency` keer korter.
 ```
 
-```python
-
-```
 
 ## Aan de slag met deeltjes
 Zoom je heel ver in, dan zie je deeltjes rond vliegen.
