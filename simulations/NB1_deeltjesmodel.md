@@ -809,7 +809,7 @@ Nu je een beetje weet hoe een numeriek model werkt, hoe je boundaries kunt opgev
 ```
 
 ```{solution} ex-deeltjes_10
-Jouw antwoord.
+1. Als de afstand tussen de twee deeltjes nul is. Of de afstand tussen de twee middelpunten $2R$ is.
 ```
 
 ```python tags=["NB1_botsingsvoorwaarde"]
@@ -828,6 +828,9 @@ class ParticleClass:
 
     def collide_detection(self, other):
         ### YOUR CODE HERE ###
+        dx = self.r[0] - other.r[0]
+        dy = self.r[1] - other.r[1]
+        rr = other.R + self.R
         return  dx**2+dy**2 < rr**2 
 ```
 
@@ -880,10 +883,11 @@ def update(frame):
     # botsing tussen de deeltjes onderling
     if particleA.collide_detection(particleB):
         ### YOUR CODE HERE ###
-
+        particleA.v[0], particleB.v[0] = particleB.v[0], particleA.v[0]
+        particleA.v[1], particleB.v[1] = particleB.v[1], particleA.v[1]
 
     # botsing met de wand
-    if particleA.r[0]**2>100: 
+    if particleA.r[0]**2 > 100: 
         particleA.v[0] = -particleA.v[0]
     if particleA.r[1]**2>100: 
         particleA.v[1] = -particleA.v[1]
@@ -954,11 +958,11 @@ Voeg op de juiste plaats(en) een update van de counter toe (per botsing moet de 
 
 Controleer de uitspraak in de video dat $\pi$ in eens opduikt bij de massaverhouding. 
 
-Wat is de beperkende factor in ons script om het aantal botsingen als functie van de massaverhouding te onderzokeen?
+Wat is de beperkende factor in ons script om het aantal botsingen als functie van de massaverhouding te onderzoeken?
 ```
 
 ```{solution} ex-deeltjes-12
-Jouw antwoord
+Het tijds interval is de grootste beperkende factor, als dt kleiner kon worden gemaakt zouden er dus meer berekeningen per seconden worden gedaan, alleen zorgt dit voor een te lange reken tijd om enigzins normaal op te wachten.
 ```
 
 
@@ -984,7 +988,7 @@ class ParticleClass:
 dt = 0.1         # time step
 num_steps = 530  # number of time steps
 m1 = 1.0
-m2 = 1.0
+m2 = 50.0
 
 particleA = ParticleClass(m=m1, v=[0, 0], r=[-4.0, 0.0],R=0.45)  
 particleB = ParticleClass(m=m2, v=[-1, 0], r=[-2.0, 0.0],R=0.45)  
@@ -1034,15 +1038,18 @@ def update(frame):
         particleA.v = vA_new
         particleB.v = vB_new
         ### YOUR CODE HERE ###
+        counter = counter + 1
 
 
     # wall collision detection and response
     if particleA.r[0]**2>100: # Check if particle is outside the bounds, np.abs could be used but is slower
         particleA.v[0] = -particleA.v[0]
         ### YOUR CODE HERE ###
+        counter = counter + 1
     if particleA.r[1]**2>100: 
         particleA.v[1] = -particleA.v[1]
         ### YOUR CODE HERE ###
+        counter = counter + 1
 
     dot.set_data([particleB.r[0]], [particleB.r[1]])
     if particleB.r[0]**2>100: 
@@ -1067,7 +1074,7 @@ Pas de bovenstaande code aan zodat $m_1 = 1$ en $m_2 = 50$. Run de code en geef 
 
 
 ```python tags=["NB1_eindantwoord"]
-#num_botsingen = ...
+#num_botsingen = 21
 ### YOUR CODE HERE ###
 ```
 
