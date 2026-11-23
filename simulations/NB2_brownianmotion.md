@@ -48,7 +48,14 @@ Als model gaan we uit van een deel van het volume van een fietsband die onder ee
 ```
 
 ```{solution} ex-recap-1
-### YOUR CODE HERE ###
+```python
+T = 293 #K
+p = 10e5 #Pa
+k_b = 1.38e-23 #J/K
+V_molecuul = k_b*T/p
+V_molecuul_h = (1.6e-9)**3
+print(V_molecuul)
+print(V_molecuul_h)
 ```
 
 De simulatie die we gaan maken bevat maar twee dimensies. We kunnen het oppervlak per deeltje in deze simulatie daarom kiezen als het zojuist berekende $V_\text{molecuul}^{2/3}$.
@@ -68,7 +75,15 @@ Ook deze heb je hierna nodig.
 ```
 
 ```{solution} ex-recap-2
-### YOUR CODE HERE ###
+```python
+m_lucht = 4.81e-26 #kg
+f = 2
+k_b = 1.38e-23 #J/K
+T = 293 #K
+v = np.sqrt(f*k_b*T/m_lucht)
+v_h = 4e2
+print(v)
+print(v_h)
 ```
 
 ```{exercise} Radius
@@ -88,11 +103,11 @@ Bekijk de waarde van `DT`. Hoe zorgt deze waaarde ervoor dat het onwaarschijnlij
 Onze simulatie modelleert dus een klein systeem zonder rekening te houden met de kracht tussen de luchtmoleculen. Je zult zien dat we toch al behoorlijk wat van de processor vragen om deze berekeningen te doen. Om een meer realistische modelsimulatie te maken is daarom een serieuze uitdaging, die veel wiskunde en programmeerervaring vraagt. Op dit ogenblik wordt dit bijvoorbeeld gevraagd bij een van de eerste opdrachten van het vak 'Computational Physics' van de master Applied Physics. 
 
 ```python tags=["NB2_init"] editable=true slideshow={"slide_type": ""}
-BOX_SIZE_0 = 10                # Hoogte en lengte startvolume
+BOX_SIZE_0 = 10 #nm                # Hoogte en lengte startvolume
 N = 40                         # Aantal deeltjes
-V_0 = 1                        # Startsnelheid van deeltjes
-RADIUS = 0.3                   # Straal van moleculen
-DT = 0.1 * RADIUS / V_0        # Tijdstap om geen botsing te missen
+V_0 = 1 #nm/s                       # Startsnelheid van deeltjes
+RADIUS = 0.3 #nm                  # Straal van moleculen
+DT = 0.1 * RADIUS / V_0      # Tijdstap om geen botsing te missen
 ```
 
 ### Particle class
@@ -183,8 +198,7 @@ Leg uit dat d.m.v. onderstaande code de deeltjes allemaal dezelfde snelheid hebb
 ```
 
 ```{solution} ex-recap-5
-Jouw antwoord hier...
-### YOUR CODE HERE ###
+De variabele vx zorgt ervoor dat de snelheden uniform worden verdeeld over -V_0 en V_0. De variabele pos zorgt ervoor met np.random.uniform dat de deeltjes random, maar uniform worden verdeeld over de ruimte.
 ```
 
 ```python tags=["NB2_init"] editable=true slideshow={"slide_type": ""}
@@ -209,8 +223,7 @@ Leg uit hoe er in onderstaande code wordt voorkomen dat de botsing tussen twee d
 ```
 
 ```{solution} ex-recap-6
-Jouw antwoord hier...
-### YOUR CODE HERE ###
+Door de i+1 krijg je dat deeltjes die botsen niet dubbel worden gecontroleerd, hierdoor krijg je geen dubbele botsingen.
 ```
 
 ```python editable=true slideshow={"slide_type": ""} tags=["NB2_init"]
@@ -312,17 +325,26 @@ Voeg aan de simulatie een regel toe die voor elke tijdstap bepaalt wat de totale
 
 ```python tags=["NB2_ex7"]
 # plotten van kinetische energie als functie van tijd
-
 particles = []
 energy_tot = []
+tijd = np.arange(0,3,0.03)
 create_particles(particles)
 for i in range(100):
     take_time_step(particles)
     # voeg de som van de kinetische energie in deze stap toe aan energy_tot 
-    ### YOUR CODE HERE ###
+    energy = 0
+    for i in particles:
+        energy += i.kin_energy
+    energy_tot.append(energy)
 
 # plot de figuur van de kinetische energie als functie van de tijd. 
-### YOUR CODE HERE ###
+plt.figure()
+plt.plot(tijd,energy_tot,'k.',label = 'kinetische energie')
+plt.legend(loc = 'upper left')
+plt.xlabel('$t$ (s)')
+plt.ylabel('$E_K$ (J)')
+plt.ylim(19.9999999999999,20.0000000000001)
+plt.show()
 ```
 
 ```{exercise} 
@@ -331,8 +353,7 @@ Als je heel nauwkeurig naar de waarde voor de totale kinetische energie kijkt, d
 ```
 
 ```{solution} ex-recap-8
-Jouw antwoord hier...
-### YOUR CODE HERE ###
+Dit gebeurt tussen 1.9e-14 en 2.1e-14, Dit komt door afrondingsonnauwkeurigheid van de floats.
 ```
 
 
