@@ -524,12 +524,12 @@ dt = 0.04
 
 # Aanmaken van deeltjes
 for i in range(N-1):
-    vx = np.random.uniform(-v_0,v_0)
-    vy = np.random.choice([-1, 1])*np.sqrt(v_0**2-vx**2)        
-    pos = Box_length_0*np.random.uniform(-1,1,2)
-    particles.append(ParticleClass(m=1.0, v=[vx, vy], r = pos, R=.5,c='blue')) 
+    vx = np.random.uniform(-v_0,v_0) #Willekeurige, maar uniforme verdeling van de x-snelheden van de deeltjes.
+    vy = np.random.choice([-1, 1])*np.sqrt(v_0**2-vx**2) #Willekeurige y-snelheid, die wordt berekend met vx en v0.        
+    pos = Box_length_0*np.random.uniform(-1,1,2) #Willekeurige plaats in de box.
+    particles.append(ParticleClass(m=1.0, v=[vx, vy], r = pos, R=.5,c='blue')) #Deeltje wordt toegevoegd aan de array.
 
-particles.append(ParticleClass(m=20.0, v=[0, 0], r = [0, 0], R=.5,c='red')) 
+particles.append(ParticleClass(m=20.0, v=[0, 0], r = [0, 0], R=.5,c='red'))#Heel zwaar deeltje wordt gemaakt zonder snelheid en in de oorsprong.
 
 ```
 
@@ -541,7 +541,7 @@ Voeg voor deze regel goede metadata toe.
 ```
 
 ```{solution} ex-brownian-1
-### YOUR CODE HERE ###
+Er wordt een stilstaand, maar 20 keer zo zwaar deeltje gemaakt in de oorsprong. De straal is hetzelfde als de andere deeltjes.
 ```
 
 
@@ -564,9 +564,9 @@ plt.ylim(-Box_length_0,Box_length_0)
 
 for particle, particle_object in enumerate(particles):
     plt.plot(particle_object.r[0],particle_object.r[1],color=particle_object.c,marker='.')
-    # plt.arrow(particle_object.r[0],particle_object.r[1], 
-    #           particle_object.v[0],particle_object.v[1], 
-    #           head_width=0.05, head_length=0.1, color='red')
+    plt.arrow(particle_object.r[0],particle_object.r[1], 
+               particle_object.v[0],particle_object.v[1], 
+               head_width=0.05, head_length=0.1, color='red')
 plt.show()
 
 ```
@@ -580,7 +580,7 @@ Hoe wordt er voor gezorgd dat de snelheid van elk deeltje gelijk is?
 ```
 
 ```{solution} ex-brownian-2
-### YOUR CODE HERE ###
+Deze code maakt snelheidsvectoren aan voor alle deeltjes. Deze geven de bewegingsrichting aan van de deeltjes en de grootte van de snelheid. De formules voor vx en vy zijn zo gemaakt dat voor alle deeltjes de magnitude van de snelheid gelijk is aan $v_0$, maar de richtingen verschillen. Deze zijn willekeurig.
 ```
 
 We gaan nu de functies van de simulatie weer aanroepen:
@@ -610,15 +610,15 @@ def particle_collision(p1: ParticleClass, p2: ParticleClass):
     p2.v += 2 * m1 / (m1 + m2) * dot_product / distance_squared * delta_r
 
 def handle_collisions(particles):
-    ### YOUR CODE HERE ###
+    aantal_botsingen = 0
     """ alle onderlinge botsingen afhandelen voor deeltjes in lijst """
     num_particles = len(particles)
     for i in range(num_particles):
         for j in range(i+1, num_particles):
             if collide_detection(particles[i], particles[j]):
                 particle_collision(particles[i], particles[j])
-                ### YOUR CODE HERE ###
-
+                aantal_botsingen += 1
+    return aantal_botsingen
 ```
 
 In onderstaande code geven we de code voor de simulatie en volgen we de positie van het zware deeltje. 
@@ -628,29 +628,25 @@ In onderstaande code geven we de code voor de simulatie en volgen we de positie 
 track_x = []
 track_y = []
 
-### YOUR CODE HERE ###
-
-### YOUR CODE HERE ###
+track_x_licht = []
+track_y_licht = []
 
 for i in range(400):
-    ### YOUR CODE HERE ###
     
     for p in particles:        
         p.update_position()    # Update positie        
         p.boxcollision()         # Wandbotsing werkt per deeltje
         
     handle_collisions(particles)
-
-    ### YOUR CODE HERE ###
+    track_x_licht.append(particles[1].r[0])
+    track_y_licht.append(particles[1].r[1])
     
     track_x.append(particles[N-1].r[0])
     track_y.append(particles[N-1].r[1])
-    
-### YOUR CODE HERE ###
 
 plt.figure()
 plt.plot(track_x,track_y,'r')
-### YOUR CODE HERE ###
+plt.plot(track_x_licht,track_y_licht,'k')
 plt.show()
 ```
 
@@ -663,7 +659,7 @@ from matplotlib.animation import FFMpegWriter
 
 # ---- tracking arrays ----
 track_x, track_y = [], []          # zwaar deeltje (bijv. particles[N-1])
-track_x2, track_y2 = [], []        # tweede deeltje (bijv. particles[0])
+track_x2, track_y2 = [], []       # tweede deeltje (bijv. particles[0])
 botsingen = []
 
 # ---- figure setup ----
@@ -700,7 +696,7 @@ def update(frame):
         p.update_position()
         p.boxcollision()
 
-    handle_collisions(particles)
+    counter = handle_collisions(particles)
 
     botsingen.append(counter)
 
@@ -749,7 +745,9 @@ ani.save("deeltjes.gif", writer="pillow", fps=20)
 ```
 
 ```{solution} ex-brownian-3
-### YOUR CODE HERE ###
+Overeenkomsten: De deeltjes volgen allebei een willekeurig pad.
+Verschillen: Het zware deeltje legt veel minder afstand af dan het lichte deeltje, ook gaat het lichte deeltje veel meer alle kanten op.
+Als je de simulatie een paar keer runt zie je hoe random eigenlijk het pad van de deeltjes is. De deeltjes eindigen nooit op dezelfde plek.
 ```
 
 
@@ -763,7 +761,14 @@ Plot hieronder het aantal botsingen als functie van de tijd.
 ```
 
 ```python
-### YOUR CODE HERE ###
+test_x = np.linspace(0,80,800)
+plot_botsingen = np.cumsum(botsingen)
+plt.figure()
+plt.plot(test_x, plot_botsingen,'k-')
+plt.xlim(0,80)
+plt.xlabel('$t$ (s)')
+plt.ylabel('aantal botsingen')
+plt.show()
 ```
 
 ```{warning} 🌶 Let op!
